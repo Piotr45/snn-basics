@@ -19,7 +19,7 @@ def soma(vx: float, ux: float, ix: float, dtx: float) -> tuple:
     i = ix
 
     if v < 35:
-        dv = 0.04 * v ** 2 + 5 * v + 140 - u
+        dv = 0.04 * v**2 + 5 * v + 140 - u
         vv = v + (dv + i) * dt
 
         # Accelerate computation
@@ -68,7 +68,7 @@ def plot_simulation(potential: np.ndarray, current: np.ndarray, time: int) -> No
     ax1.set_xlabel("Time [ms]")
     ax1.set_ylabel("v1 [mV]")
 
-    ax2.plot(time_x, current, color='red')
+    ax2.plot(time_x, current, color="red")
     ax2.set_title("Soma current")
     ax2.set_xlabel("Time [ms]")
     ax2.set_ylabel("i1 [pA]")

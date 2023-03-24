@@ -107,11 +107,13 @@ def simulation(
     return
 
 
-def plot_simulation(potential: np.ndarray, current: Tuple[np.ndarray, ...], time: int) -> None:
+def plot_simulation(
+    potential: np.ndarray, current: Tuple[np.ndarray, ...], time: int
+) -> None:
     assert len(current) == 2
-    
+
     time_x = np.arange(0, time)
-    
+
     i1, i2 = current
 
     fig, (ax1, ax2, ax3) = plt.subplots(3, 1)

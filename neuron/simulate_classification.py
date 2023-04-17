@@ -49,6 +49,28 @@ def get_Izhikevich_params(
     return a, b, c, d
 
 
+def plot_simulation(potential: np.ndarray, time: int) -> None:
+    time_x = np.arange(0, time)
+    out1 = potential[0]
+    out2 = potential[1]
+
+    fig, (ax1, ax2) = plt.subplots(2, 1)
+    fig.set_size_inches(9.5, 5.5, forward=True)
+    fig.tight_layout(h_pad=3)
+
+    ax1.plot(time_x, out1)
+    ax1.set_xlabel("Time [ms]")
+    ax1.set_ylabel("OUT1 [mV]")
+
+    ax2.plot(time_x, out2, color="red")
+    ax2.set_xlabel("Time [ms]")
+    ax2.set_ylabel("OUT2 [mV]")
+
+    # fig.savefig("izhikevich_neuron_model.png")
+    plt.show()
+    return
+
+
 class SNN_classificator:
     """"""
 
@@ -112,7 +134,7 @@ class SNN_classificator:
         return
 
     def _encode_information(self, neuron_idx: int, dt: float, t: int) -> None:
-        if self.encoding_method == "Latency Coding":  # Time between first two spikes
+        if self.encoding_method == "Latency Encoding":  # Time between first two spikes
             self._latency_encoding(neuron_idx, dt, t)
         else:
             raise ValueError("Wrong encoding method!")
@@ -137,11 +159,14 @@ class SNN_classificator:
 
     def _update(self, t: int) -> None:
         """"""
-        i_a = np.dot(self.weights, self.input_currents[:, t])
+        i_a = np.dot(self.weights[:4], self.input_currents[:, t])
 
         neuron_a = self._soma(
             self.output_voltages[0][t], self.neuron_potentials[0][t], i_a, 1
         )
+
+        i_a = np.dot(self.weights[4:], self.input_currents[:, t])
+
         neuron_b = self._soma(
             self.output_voltages[1][t], self.neuron_potentials[1][t], i_a, 1
         )
@@ -174,13 +199,15 @@ class SNN_classificator:
 
 def main() -> None:
     simulation_time = 1200  # ms
+    weights = np.random.rand(8,)
 
     snn_classifier = SNN_classificator(
-        10, np.random.rand(4,), "Latency Encoding", 500.0, 40
+        10, weights, "Latency Encoding", 500.0, 40
     )
 
     snn_classifier.run_simulation(simulation_time, 1)
 
+    plot_simulation(snn_classifier.output_voltages, simulation_time)
 
 if __name__ == "__main__":
     main()
